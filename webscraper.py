@@ -2,7 +2,8 @@ import streamlit as st
 from bs4 import BeautifulSoup as bd
 import requests
 import pickle
-
+from glob import glob
+from tqdm import tqdm
 
 st.title("N-Tech :red[Web Scraper]")
 url = st.text_input("Enter URL")
@@ -30,36 +31,61 @@ if scrap:
         soup = bd(page.content, 'html.parser')
         pt = soup.prettify()
         st.write(pt)
+        pickle.dump(pt, open("a.html", "wb"))
     elif ht in url:
+        st.button('Not Secure Click')
         page = requests.get(url)
         soup = bd(page.content, 'html.parser')
         pt = soup.prettify()
-        if st.button('Not Secure Click to Access'):
-            st.write(pt)
+        st.write(pt)
 
     else:
         page = requests.get(hts + url)
         soup = bd(page.content, 'html.parser')
         pt = soup.prettify()
         st.write(pt)
+        pickle.dump(pt, open("a.html", "wb"))
 
 
 for options in mm:
     if options == "Title":
-        page = requests.get(ht + url)
-        soup = bd(page.content, 'html.parser')
-        title = soup.title()
-        st.write(title)
+        if ht in url:
+            page = requests.get(url)
+            soup = bd(page.content, 'html.parser')
+            title = soup.title()
+            st.write(title)
+        elif hts in url:
+            page = requests.get(url)
+            soup = bd(page.content, 'html.parser')
+            title = soup.title()
+            st.write(title)
+        else:
+            page = requests.get(hts + url)
+            soup = bd(page.content, 'html.parser')
+            title = soup.title()
+            st.write(title)
+
     if options == 'Head':
         page = requests.get(ht + url)
         soup = bd(page.content, 'html.parser')
         head = soup.head()
         st.write(head)
     if options == "Body":
-        page = requests.get(ht + url)
-        soup = bd(page.content, 'html.parser')
-        body = soup.body()
-        st.write(body)
+        if hts in url:
+            page = requests.get(url)
+            soup = bd(page.content, 'html.parser')
+            body = soup.body()
+            st.write(body)
+        elif hts in url:
+            page = requests.get(url)
+            soup = bd(page.content, 'html.parser')
+            body = soup.body()
+            st.write(body)
+        else:
+            page = requests.get(hts + url)
+            soup = bd(page.content, 'html.parser')
+            body = soup.body()
+            st.write(body)
     if options == "Div":
         page = requests.get(ht + url)
         soup = bd(page.content, 'html.parser')
@@ -79,22 +105,57 @@ for options in mm:
 search_tag = st.sidebar.text_input("Scrap by Tag")
 
 if st.sidebar.button('Scrap_By_TAG'):
-    page = requests.get(ht + url)
-    soup = bd(page.content, 'html.parser')
-    si = soup.find_all(search_tag)
-    st.write(si)
+    if hts in url:
+        page = requests.get(url)
+        soup = bd(page.content, 'html.parser')
+        si = soup.find_all(search_tag)
+        st.write(si)
+    elif ht in url:
+        page = requests.get(url)
+        soup = bd(page.content, 'html.parser')
+        si = soup.find_all(search_tag)
+        st.write(si)
+    else:
+        page = requests.get(hts + url)
+        soup = bd(page.content, 'html.parser')
+        si = soup.find_all(search_tag)
+        st.write(si)
 
 
 search_class = st.sidebar.text_input("Scrap by Class")
 if st.sidebar.button('Scrap_By_Class'):
-    page = requests.get(ht + url)
-    soup = bd(page.content, 'html.parser')
-    sc = soup.find_all(class_=search_class)
-    st.write(sc)
+    if hts in url:
+        page = requests.get(url)
+        soup = bd(page.content, 'html.parser')
+        sc = soup.find_all(class_=search_class)
+        st.write(sc)
+    elif hts in url:
+        page = requests.get(url)
+        soup = bd(page.content, 'html.parser')
+        sc = soup.find_all(class_=search_class)
+        st.write(sc)
+    else:
+        page = requests.get(hts + url)
+        soup = bd(page.content, 'html.parser')
+        sc = soup.find_all(class_=search_class)
+        st.write(sc)
+
 search_id = st.sidebar.text_input("Scrap by ID")
 
 if st.sidebar.button('Scrap_By_Id'):
-    page = requests.get(ht + url)
-    soup = bd(page.content, 'html.parser')
-    si = soup.find_all(id=search_id)
-    st.write(si)
+    if hts in url:
+        page = requests.get(url)
+        soup = bd(page.content, 'html.parser')
+        si = soup.find_all(id=search_id)
+        st.write(si)
+    elif ht in url:
+        page = requests.get(url)
+        soup = bd(page.content, 'html.parser')
+        si = soup.find_all(id=search_id)
+        st.write(si)
+    else:
+        page = requests.get(url)
+        soup = bd(page.content, 'html.parser')
+        si = soup.find_all(id=search_id)
+        st.write(si)
+
