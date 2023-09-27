@@ -2,8 +2,6 @@ import streamlit as st
 from bs4 import BeautifulSoup as bd
 import requests
 import pickle
-from glob import glob
-from tqdm import tqdm
 
 st.title("N-Tech :red[Web Scraper]")
 url = st.text_input("Enter URL")
