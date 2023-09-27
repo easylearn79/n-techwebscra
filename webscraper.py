@@ -3,12 +3,13 @@ from bs4 import BeautifulSoup as bd
 import requests
 import pickle
 
-ht = 'https://'
+
 st.title("N-Tech :red[Web Scraper]")
 url = st.text_input("Enter URL")
 scrap = st.button("Scrap")
 
-
+hts = 'https://'
+ht = 'http://'
 
 
 # Sidebar
@@ -24,12 +25,24 @@ mm = st.sidebar.multiselect("select scraping option Pre-defined Values",
 if scrap:
     if url == '':
         st.text('Enter a URL')
-    else:
-        page = requests.get(ht + url)
+    elif hts in url:
+        page = requests.get(url)
         soup = bd(page.content, 'html.parser')
         pt = soup.prettify()
         st.write(pt)
-        pickle.dump(pt, open("a.html", "wb"))
+    elif ht in url:
+        page = requests.get(url)
+        soup = bd(page.content, 'html.parser')
+        pt = soup.prettify()
+        if st.button('Not Secure Click to Access'):
+            st.write(pt)
+
+    else:
+        page = requests.get(hts + url)
+        soup = bd(page.content, 'html.parser')
+        pt = soup.prettify()
+        st.write(pt)
+
 
 for options in mm:
     if options == "Title":
