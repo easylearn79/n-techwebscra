@@ -1,51 +1,87 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import streamlit as st
-from streamlit.logger import get_logger
+from bs4 import BeautifulSoup as bd
+import requests
+import pickle
 
-LOGGER = get_logger(__name__)
-
-
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
-
-    st.write("# Welcome to Streamlit! 👋")
-
-    st.sidebar.success("Select a demo above.")
-
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+ht = 'https://'
+st.title("N-Tech :red[Web Scraper]")
+url = st.text_input("Enter URL")
+scrap = st.button("Scrap")
 
 
-if __name__ == "__main__":
-    run()
+
+
+# Sidebar
+
+st.sidebar.title(":blue[Web Scrapping Made Easy]")
+st.sidebar.text('The libraries used in creating this')
+st.sidebar.text('webscraper')
+st.sidebar.text('1.requests 2.BeautifulSoup')
+mm = st.sidebar.multiselect("select scraping option Pre-defined Values",
+                            ["Title", "Head", "Body", "Div", "A-href", "TB"]
+                            )
+
+if scrap:
+    if url == '':
+        st.text('Enter a URL')
+    else:
+        page = requests.get(ht + url)
+        soup = bd(page.content, 'html.parser')
+        pt = soup.prettify()
+        st.write(pt)
+        pickle.dump(pt, open("a.html", "wb"))
+
+for options in mm:
+    if options == "Title":
+        page = requests.get(ht + url)
+        soup = bd(page.content, 'html.parser')
+        title = soup.title()
+        st.write(title)
+    if options == 'Head':
+        page = requests.get(ht + url)
+        soup = bd(page.content, 'html.parser')
+        head = soup.head()
+        st.write(head)
+    if options == "Body":
+        page = requests.get(ht + url)
+        soup = bd(page.content, 'html.parser')
+        body = soup.body()
+        st.write(body)
+    if options == "Div":
+        page = requests.get(ht + url)
+        soup = bd(page.content, 'html.parser')
+        all_div = soup.find_all('div')
+        st.write(all_div)
+    if options == 'A-href':
+        page = requests.get(ht + url)
+        soup = bd(page.content, 'html.parser')
+        a = soup.find_all('a')
+        st.write(a)
+    if options == "TB":
+        page = requests.get(ht + url)
+        soup = bd(page.content, 'html.parser')
+        tb = soup.find(id='li')
+        st.write(tb)
+
+search_tag = st.sidebar.text_input("Scrap by Tag")
+
+if st.sidebar.button('Scrap_By_TAG'):
+    page = requests.get(ht + url)
+    soup = bd(page.content, 'html.parser')
+    si = soup.find_all(search_tag)
+    st.write(si)
+
+
+search_class = st.sidebar.text_input("Scrap by Class")
+if st.sidebar.button('Scrap_By_Class'):
+    page = requests.get(ht + url)
+    soup = bd(page.content, 'html.parser')
+    sc = soup.find_all(class_=search_class)
+    st.write(sc)
+search_id = st.sidebar.text_input("Scrap by ID")
+
+if st.sidebar.button('Scrap_By_Id'):
+    page = requests.get(ht + url)
+    soup = bd(page.content, 'html.parser')
+    si = soup.find_all(id=search_id)
+    st.write(si)
